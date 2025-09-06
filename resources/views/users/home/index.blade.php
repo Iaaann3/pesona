@@ -106,10 +106,7 @@
         <div class="service-icon"><i class="fas fa-wifi"></i></div>
         <div class="service-label">Paket Data</div>
     </a>
-    <a href="#" class="service-item">
-        <div class="service-icon"><i class="fas fa-signal"></i></div>
-        <div class="service-label">Roaming</div>
-    </a>
+    
     <a href="#" class="service-item">
         <div class="service-icon"><i class="fas fa-receipt"></i></div>
         <div class="service-label">Pascabayar</div>
@@ -118,10 +115,7 @@
         <div class="service-icon"><i class="fas fa-bolt"></i></div>
         <div class="service-label">Token Listrik</div>
     </a>
-    <a href="#" class="service-item">
-        <div class="service-icon"><i class="fas fa-ticket-alt"></i></div>
-        <div class="service-label">TapCash</div>
-    </a>
+    
     <a href="#" class="service-item">
         <div class="service-icon"><i class="fab fa-google-pay"></i></div>
         <div class="service-label">Top up GoPay</div>
