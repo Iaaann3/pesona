@@ -1,14 +1,10 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        📅 Daftar Kegiatan
-    </h1>
 
-    @if($kegiatan->isEmpty())
-        {{-- Jika tidak ada kegiatan --}}
-        @include('layouts.kegiatan.oops')
+
+@if($kegiatan->isEmpty())       
+    @include ('layouts.kegiatan.oops')
     @else
         {{-- Looping kegiatan --}}
         <div class="space-y-4">
@@ -29,6 +25,11 @@
                         <h2 class="text-base font-semibold text-gray-900 mb-1">
                             {{ ucfirst($item->nama_kegiatan) }}
                         </h2>
+
+                        {{-- Tanggal kegiatan --}}
+                        <p class="text-xs text-gray-500 mb-1">
+                            🗓️ {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
+                        </p>
 
                         <p class="text-gray-600 text-sm mb-2">
                             {{ Str::limit($item->deskripsi, 100) }}

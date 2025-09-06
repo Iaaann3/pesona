@@ -16,6 +16,7 @@
                             <th>Nama Kegiatan</th>
                             <th>Deskripsi</th>
                             <th>Lokasi</th>
+                            <th>Tanggal</th>
                             <th>Gambar</th>
                             <th>Aksi</th>
                         </tr>
@@ -27,6 +28,7 @@
                                 <td>{{ $kegiatan->nama_kegiatan }}</td>
                                 <td>{{ Str::limit($kegiatan->deskripsi, 50, '...') }}</td>
                                 <td>{{ $kegiatan->lokasi }}</td>
+                                <td>{{ $kegiatan->tanggal }}</td>
                                 <td>
                                     @if($kegiatan->gambar)
                                         <img src="{{ asset('storage/' . $kegiatan->gambar) }}" 

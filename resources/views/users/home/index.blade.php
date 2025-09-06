@@ -70,11 +70,11 @@
                 <div class="service-label">Saran & Kritik</div>
             </a>
             <a href="javascript:;" class="service-item" data-bs-toggle="modal" data-bs-target="#tataTertibModal">
-    <div class="service-icon">
-        <i class="fas fa-info-circle"></i>
-    </div>
-    <div class="service-label">Tata Tertib</div>
-</a>
+                <div class="service-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="service-label">Tata Tertib</div>
+            </a>
 
             <a href="#" class="service-item">
                 <div class="service-icon">
@@ -95,6 +95,54 @@
                 <div class="service-label">Bazaar</div>
             </a> -->
         </div>
+
+        <h3 class="section-title">Layanan Populer</h3>
+<div class="service-grid">
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div class="service-label">Pulsa</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-wifi"></i></div>
+        <div class="service-label">Paket Data</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-signal"></i></div>
+        <div class="service-label">Roaming</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-receipt"></i></div>
+        <div class="service-label">Pascabayar</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-bolt"></i></div>
+        <div class="service-label">Token Listrik</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-ticket-alt"></i></div>
+        <div class="service-label">TapCash</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fab fa-google-pay"></i></div>
+        <div class="service-label">Top up GoPay</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-wallet"></i></div>
+        <div class="service-label">Top up DANA</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-credit-card"></i></div>
+        <div class="service-label">Top up OVO</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-bolt"></i></div>
+        <div class="service-label">Tagihan Listrik</div>
+    </a>
+    <a href="#" class="service-item">
+        <div class="service-icon"><i class="fas fa-tv"></i></div>
+        <div class="service-label">Internet & TV Kabel</div>
+    </a>
+</div>
 
         <!-- News Section -->
        <div class="info-section">

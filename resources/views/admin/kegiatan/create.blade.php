@@ -37,6 +37,14 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="lokasi" class="form-label">Tanggal</label>
+                    <input type="text" name="lokasi" id="lokasi" class="form-control @error('tanggal') is-invalid @enderror" value="{{ old('tanggal') }}">
+                    @error('tanggal')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
                     <label for="gambar" class="form-label">Gambar</label>
                     <input type="file" name="gambar" id="gambar" class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
                     @error('gambar')

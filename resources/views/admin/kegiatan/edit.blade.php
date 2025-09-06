@@ -37,6 +37,14 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="tanggal" class="form-label">tanggal</label>
+                    <input type="text" name="tanggal" id="tanggal" class="form-control @error('tanggal') is-invalid @enderror" value="{{ old('tanggal', $kegiatan->tanggal) }}">
+                    @error('tanggal')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
                     <label for="gambar" class="form-label">Gambar</label>
                     @if($kegiatan->gambar)
                         <div class="mb-2">

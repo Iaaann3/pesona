@@ -368,6 +368,23 @@
             }
         }
 
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateX(-3px);
+        }
         /* Loading Animation */
         .loading {
             opacity: 0;
@@ -395,6 +412,9 @@
     <div class="container">
         <!-- Profile Header -->
         <div class="profile-header">
+            <!-- Tombol Kembali -->
+            <a href="{{ url()->previous() }}" class="back-button">← Kembali</a>
+            <br>
             <div class="profile-top">
                 <div class="profile-info">
                     <h1>{{ $user->name }}</h1>
@@ -408,20 +428,20 @@
 
         <!-- Profile Details -->
         <div class="profile-details">
-            <!-- <div class="detail-item loading">
-                <div class="detail-value">{{ $user->phone ?? '-' }}</div>
+            <div class="detail-item loading">
+                <div class="detail-value">{{ $user->no_tlp ?? '-' }}</div>
                 <div class="detail-label">No. Telp</div>
-            </div> -->
+            </div>
 
             <div class="detail-item loading">
                 <div class="detail-value">{{ $user->email }}</div>
                 <div class="detail-label">E-mail</div>
             </div>
 
-            <!-- <div class="detail-item loading">
+            <div class="detail-item loading">
                 <div class="detail-value">{{ $user->alamat ?? '-' }}</div>
                 <div class="detail-label">Alamat</div>
-            </div> -->
+            </div>
         </div>
 
         <!-- Dashboard Section -->
@@ -431,8 +451,11 @@
 
             <div class="dashboard-grid">
                 <!-- Main Prospek Card -->
+                 <div class="main-card loading">
+                    <div class="main-number" id="prospekNumber">0</div>
+                    <div class="main-label">Prospek</div>
+                </div>
                 
-
                 <!-- Stats Cards -->
                 <div class="stats-cards">
                     <div class="stat-card loading">
@@ -440,6 +463,14 @@
                         <div class="stat-content">
                             <div class="stat-number">{{ $iklanCount }}</div>
                             <div class="stat-label">Iklan Saya</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card loading">
+                        <div class="stat-icon blue">📧</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="ticketsNumber">0</div>
+                            <div class="stat-label">Tickets</div>
                         </div>
                     </div>
 
