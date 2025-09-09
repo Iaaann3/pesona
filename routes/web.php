@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\IklanController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengumumanController;
@@ -10,7 +12,6 @@ use App\Http\Controllers\UserKegiatanController;
 use App\Http\Controllers\UserPembayaranController;
 use App\Http\Controllers\UserPengumumanController;
 use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::group([
     Route::resource('pengumuman', PengumumanController::class);
     Route::resource('kegiatan', KegiatanController::class);
     Route::resource('saran', KritikSaranController::class);
+    Route::resource('rekenings', RekeningController::class);
 });
 
 // ================= User Routes =================
@@ -64,20 +66,19 @@ Route::group([
     Route::post('/pembayaran/{id}/bayar', [App\Http\Controllers\UserPembayaranController::class, 'bayar'])
         ->name('pembayaran.bayar');
 
-
     // Kegiatan
     Route::get('/kegiatan', [UserKegiatanController::class, 'index'])
         ->name('kegiatan.index');
 
-        Route::get('/kegiatan/{id}', [UserKegiatanController::class, 'show'])
-    ->name('kegiatan.show');
+    Route::get('/kegiatan/{id}', [UserKegiatanController::class, 'show'])
+        ->name('kegiatan.show');
 
 // Pengumuman
     Route::get('/pengumuman', [UserPengumumanController::class, 'index'])
         ->name('pengumuman.index');
 
-        Route::get('/pengumuman/{id}', [UserPengumumanController::class, 'show'])
-    ->name('pengumuman.show');
+    Route::get('/pengumuman/{id}', [UserPengumumanController::class, 'show'])
+        ->name('pengumuman.show');
 
 // Profile
     Route::get('/my-profile', [UserProfileController::class, 'index'])

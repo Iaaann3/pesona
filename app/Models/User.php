@@ -57,4 +57,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(kritikSaran::class, 'id_user');
     }
+    
+    // Relasi ke tabel pembayaran
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class, 'id_user');
+    }
+
+    public function dibayar()
+    {
+        return $this->hasMany(Dibayar::class, 'id_user');
+    }
+
+
+
+
+
 }

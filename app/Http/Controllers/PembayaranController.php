@@ -13,115 +13,113 @@ class PembayaranController extends Controller
 {
     
     // Menampilkan semua pembayaran
-    public function index()
+   public function index()
 {
     if (auth()->user()->role === 'admin') {
-        $data = Pembayaran::all();
+        $data = Pembayaran::with('dibayar')->get();
     } else {
-        $data = Pembayaran::where('id_user', auth()->id())->get();
+        $data = Pembayaran::with('dibayar')
+            ->where('id_user', auth()->id())
+            ->get();
     }
 
     return view('admin.pembayaran.index', compact('data'));
 }
 
+
+
+public function create()
+    {
+        return view('admin.pembayaran.create');
+    }
+
     // Simpan data baru
     public function store(Request $request)
 {
-    // Validasi tanggal harus unik
-    $validated = $request->validate([
-        'tanggal' => 'required|unique:pembayarans,tanggal',
+   $today = now(); // tanggal hari ini
+
+$request->validate([
+    'keamanan'   => 'required|integer|min:0',
+    'kebersihan' => 'required|integer|min:0',
+]);
+
+// Cek apakah bulan ini sudah ada pembayaran untuk semua user
+$exists = Pembayaran::whereMonth('tanggal', $today->month)
+    ->whereYear('tanggal', $today->year)
+    ->exists();
+
+if ($exists) {
+    return back()->withErrors(['msg' => 'Pembayaran bulan ini sudah dibuat.'])->withInput();
+}
+
+$users = \App\Models\User::all();
+
+foreach ($users as $user) {
+    Pembayaran::create([
+        'id_user'    => $user->id,
+        'keamanan'   => $request->keamanan,
+        'kebersihan' => $request->kebersihan,
+        'tanggal'    => $today,
+        'status'     => 'belum terbayar',
+        'total'      => $request->keamanan + $request->kebersihan,
     ]);
+}
 
-    // Pastikan tanggal yang dipilih adalah tanggal 4
-    if (\Carbon\Carbon::parse($request->tanggal)->day != 1) {
-        return back()
-            ->withErrors(['tanggal' => 'Pembayaran hanya bisa pada tanggal 1 setiap bulan.'])
-            ->withInput();
-    }
+return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil dibuat untuk semua user.');
 
-    DB::beginTransaction();
-    try {
-        $pembayaran = new Pembayaran();
-        $pembayaran->id_user     = auth()->id(); // supaya nyimpen ke user yang login
-        $pembayaran->keamanan    = 101120;       // nilai tetap
-        $pembayaran->kebersihan  = 40000;        // nilai tetap
-        $pembayaran->tanggal     = $request->tanggal;
-        $pembayaran->total       = $pembayaran->keamanan + $pembayaran->kebersihan;
-        $pembayaran->status      = 'belum terbayar';
-        $pembayaran->save();
-
-        DB::commit();
-
-        toast('Data berhasil disimpan', 'success');
-        return redirect()->route('admin.pembayaran.index');
-    } catch (Exception $e) {
-        DB::rollBack();
-        return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
-    }
 }
 
 
-    // Update pembayaran
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'keamanan'   => 'required|integer',
-            'kebersihan' => 'required|integer',
-            'tanggal'    => 'required|date',
-            'status'     => 'required|in:belum terbayar,pembayaran berhasil',
-        ]);
+public function edit($id)
+{
+    $pembayaran = Pembayaran::with('dibayar')->findOrFail($id);
 
-        DB::beginTransaction();
-        try {
-            $pembayaran = Pembayaran::findOrFail($id);
-            $total = $request->keamanan + $request->kebersihan;
+    // pastikan hanya owner yg bisa akses kecuali admin
+    if (auth()->user()->role !== 'admin' && $pembayaran->id_user !== auth()->id()) {
+        abort(403, 'Unauthorized');
+    }
 
-            $pembayaran->update([
-                'keamanan'   => $request->keamanan,
-                'kebersihan' => $request->kebersihan,
-                'tanggal'    => $request->tanggal,
-                'status'     => $request->status,
-                'total'      => $total,
+    return view('admin.pembayaran.edit', compact('pembayaran'));
+}
+
+public function update(Request $request, $id)
+{
+    $pembayaran = Pembayaran::with('dibayar')->findOrFail($id);
+
+    $request->validate([
+        'status' => 'required|in:belum terbayar,pembayaran berhasil',
+        'foto'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    // update status
+    $pembayaran->update([
+        'status' => $request->status,
+    ]);
+
+    // kalau ada upload bukti
+    if ($request->hasFile('foto')) {
+        $path = $request->file('foto')->store('bukti', 'public');
+
+        if ($pembayaran->dibayar) {
+            $pembayaran->dibayar->update([
+                'foto' => $path,
             ]);
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Pembayaran berhasil diupdate',
-                'data'    => $pembayaran
+        } else {
+            $pembayaran->dibayar()->create([
+                'id_user' => $pembayaran->id_user,
+                'rekening_id' => $request->rekening_id ?? null,
+                'foto' => $path,
             ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal update data',
-                'error'   => $e->getMessage()
-            ], 500);
         }
     }
+
+    return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil diupdate.');
+}
+
 
     // Hapus pembayaran
     public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
-            $pembayaran = Pembayaran::findOrFail($id);
-            $pembayaran->delete();
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Pembayaran berhasil dihapus'
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal hapus data',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
+       
     }
 }

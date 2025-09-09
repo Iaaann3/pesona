@@ -15,6 +15,7 @@ class Kegiatan extends Model
         'nama_kegiatan',
         'deskripsi',
         'lokasi',
+        'tanggal',
         'gambar',
     ];
 }

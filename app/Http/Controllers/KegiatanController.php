@@ -24,13 +24,14 @@ class KegiatanController extends Controller
             'nama_kegiatan' => 'required|string|max:255',
             'deskripsi'     => 'nullable|string',
             'lokasi'        => 'nullable|string|max:255',
+            'tanggal' => 'required|date',
             'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = $request->only(['nama_kegiatan', 'deskripsi', 'lokasi']);
+            $data = $request->only(['nama_kegiatan', 'deskripsi', 'lokasi', 'tanggal']);
 
             if ($request->hasFile('gambar')) {
                 $data['gambar'] = $request->file('gambar')->store('kegiatan', 'public');
@@ -59,6 +60,7 @@ class KegiatanController extends Controller
             'nama_kegiatan' => 'required|string|max:255',
             'deskripsi'     => 'nullable|string',
             'lokasi'        => 'nullable|string|max:255',
+            'tanggal' => 'required|date',
             'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
@@ -66,7 +68,7 @@ class KegiatanController extends Controller
             DB::beginTransaction();
 
             $kegiatan = Kegiatan::findOrFail($id);
-            $data     = $request->only(['nama_kegiatan', 'deskripsi', 'lokasi']);
+            $data     = $request->only(['nama_kegiatan', 'deskripsi', 'lokasi', 'tanggal']);
 
             if ($request->hasFile('gambar')) {
                 $data['gambar'] = $request->file('gambar')->store('kegiatan', 'public');

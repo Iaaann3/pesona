@@ -16,6 +16,12 @@
                 <span class="hide-menu">Pembayaran</span>
               </a>
             </li>
+             <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('admin.rekenings.index') }}">
+                <span><i class="ti ti-cash"></i></span>
+                <span class="hide-menu">Rekening</span>
+              </a>
+            </li>
             <li class="sidebar-item">
               <a class="sidebar-link" href="{{ route('admin.iklan.index') }}">
                 <span><i class="ti ti-broadcast"></i></span>

@@ -21,8 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function (Schedule $schedule) {
         // Jalan setiap tanggal 1 jam 00:00
-        $schedule->command('pembayaran:generate')->monthlyOn(1, '00:00');
-        // $schedule->command('pembayaran:generate')->everyMinute();
+        // $schedule->command('pembayaran:generate')->monthlyOn(1, '00:00');
+        $schedule->command('pembayaran:generate')->everyMinute();
 
     })
     ->create();
