@@ -19,7 +19,7 @@ class Pembayaran extends Model
         'kebersihan',
         'tanggal',
         'status',
-        'bayar_id',
+        'dibayar_id',
         'total',
     ];
 
@@ -31,7 +31,7 @@ class Pembayaran extends Model
 
     public function dibayar()
 {
-    return $this->belongsTo(Dibayar::class, 'bayar_id');
+    return $this->belongsTo(Dibayar::class, 'dibayar_id', 'id');
 }
 
 }

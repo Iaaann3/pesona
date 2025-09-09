@@ -25,7 +25,7 @@ class Dibayar extends Model
 
    public function pembayaran()
     {
-    return $this->hasMany(Pembayaran::class, 'bayar_id');
+    return $this->hasMany(Pembayaran::class, 'dibayar_id');
     }
 
 }

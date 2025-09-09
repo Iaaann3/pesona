@@ -40,17 +40,7 @@ class UserPembayaranController extends Controller
         return view('users.pembayaran.detail', compact('pembayaran'));
     }
 
-    public function bayar($id)
-    {
-       $pembayaran = Pembayaran::findOrFail($id);
-
-        if ($pembayaran->status !== 'pembayaran berhasil') {
-            $pembayaran->status = 'pembayaran berhasil';
-            $pembayaran->save();
-        }
-
-        return response()->json(['success' => true]);
-    }
+    
 
     
 }

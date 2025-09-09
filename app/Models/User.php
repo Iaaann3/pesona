@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -18,9 +18,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+            'name',
+            'no_rumah',
+            'no_tlp',
+            'alamat',
+            'email',
+            'password',
+            'role',
     ];
 
     /**
@@ -45,6 +49,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 
 
      public function iklan()

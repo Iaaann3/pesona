@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\IklanController;
 use App\Http\Controllers\KegiatanController;
@@ -8,10 +9,14 @@ use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\UserIklanController;
 use App\Http\Controllers\UserKegiatanController;
 use App\Http\Controllers\UserPembayaranController;
 use App\Http\Controllers\UserPengumumanController;
+use app\Http\Controllers\UserBayarController;
+use App\Http\Controllers\BayarController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +32,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group([
     'prefix'     => 'admin',
     'as'         => 'admin.',
-    'middleware' => ['auth', IsAdmin::class],
+    'middleware' => ['auth:admin' ],
 ], function () {
     Route::resource('pembayaran', PembayaranController::class);
     Route::resource('iklan', IklanController::class);
@@ -36,6 +41,10 @@ Route::group([
     Route::resource('saran', KritikSaranController::class);
     Route::resource('rekenings', RekeningController::class);
 });
+
+Route::get('login/admin', [AdminController::class, 'showLoginForm'])->name('admin.login.form');
+Route::post('login/admin', [AdminController::class, 'login'])->name('admin.login');
+
 
 // ================= User Routes =================
 Route::group([
@@ -50,6 +59,10 @@ Route::group([
     Route::get('/home', [UserDashboardController::class, 'index'])
         ->name('home.index');
 
+    Route::post('/bayar', [UserDashboardController::class, 'store'])
+        ->name('bayar.store');
+
+
     // Daftar pembayaran
     Route::get('/pembayaran', [App\Http\Controllers\UserPembayaranController::class, 'index'])
         ->name('pembayaran.index');
@@ -58,6 +71,10 @@ Route::group([
     Route::get('/pembayaran/riwayat', [App\Http\Controllers\UserPembayaranController::class, 'riwayat'])
         ->name('pembayaran.riwayat');
 
+    // bayar
+   
+
+        
     // Detail pembayaran
     Route::get('/pembayaran/{id}/detail', [UserPembayaranController::class, 'detail'])
         ->name('pembayaran.detail');

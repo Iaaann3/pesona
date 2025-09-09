@@ -34,14 +34,14 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm rounded-3" style="font-size:13px;">
                     <li>
-                        <a class="dropdown-item text-dark px-3 py-2" href="#">
+                        <a href="https://wa.me/628815873744?text=Permisi%20Admin,%20saya%20mau%20pasang%20iklan" 
+                        target="_blank"
+                        class="dropdown-item text-dark px-3 py-2">
                             <i class="fas fa-image text-primary me-2"></i> Pasang Iklan
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;" class="dropdown-item text-dark px-3 py-2" 
-                           data-bs-toggle="modal" 
-                           data-bs-target="#modal-kritik-saran">
+                       <a href="{{ route('user.saran.index') }}" class="dropdown-item text-dark px-3 py-2">
                             <i class="fas fa-envelope-open-text text-success me-2"></i> Kritik & Saran
                         </a>
                     </li>
