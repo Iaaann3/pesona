@@ -17,6 +17,7 @@ use app\Http\Controllers\UserBayarController;
 use App\Http\Controllers\BayarController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserBaruController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,7 @@ Route::group([
     Route::resource('kegiatan', KegiatanController::class);
     Route::resource('saran', KritikSaranController::class);
     Route::resource('rekenings', RekeningController::class);
+    Route::resource('users', UserBaruController::class);
 });
 
 Route::get('login/admin', [AdminController::class, 'showLoginForm'])->name('admin.login.form');

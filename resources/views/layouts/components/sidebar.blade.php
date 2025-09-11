@@ -48,5 +48,11 @@
                 <span class="hide-menu">Saran & Kritik</span>
               </a>
             </li>
+            <li class="sidebar-item ">
+              <a class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'bg-primary text-white rounded' : '' }}" href="{{ route('admin.users.index') }}">
+                <span><i class="fas fa-user"></i></span>
+                <span class="hide-menu">User</span>
+              </a>
+            </li>
           </ul>
         </nav>

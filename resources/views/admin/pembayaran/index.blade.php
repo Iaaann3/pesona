@@ -100,16 +100,32 @@
                                     @endif
                                 </td>
 
-                                <td>
-                                   @if($pembayaran->status == 'belum terbayar')
-                                    <a href="{{ route('admin.pembayaran.edit', $pembayaran->id) }}" 
-                                    class="btn btn-warning btn-sm">
-                                        Edit
-                                    </a>
-                                    @else
-                                       
+                               <td class="text-center">
+                                @if($pembayaran->status == 'belum terbayar')
+                                    @if($pembayaran->dibayar && $pembayaran->dibayar->foto)
+                                        <a href="{{ route('admin.pembayaran.edit', $pembayaran->id) }}" 
+                                        class="btn btn-warning btn-sm">
+                                            Edit
+                                        </a>
+
+                                        <!-- Tombol Show Modal -->
+                                        <button class="btn btn-primary btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#showModal{{ $pembayaran->id }}">
+                                            Show
+                                        </button>
                                     @endif
-                                </td>
+                                @elseif($pembayaran->status == 'pembayaran berhasil')
+                                    <form action="{{ route('admin.pembayaran.destroy', $pembayaran->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin ingin menghapus pembayaran ini?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
+                            </td>
                             </tr>
                         @empty
                             <tr>

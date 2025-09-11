@@ -63,7 +63,7 @@ class UserDashboardController extends Controller
     $pembayaran->update(['dibayar_id' => $dibayar->id]);
 
     // 5️⃣ Redirect ke home
-    return redirect()->route('users.home.index')->with('success', 'Bukti pembayaran berhasil dikirim.');
+    return redirect()->route('user.home.index')->with('success', 'Bukti pembayaran berhasil dikirim.');
     }
 }
 

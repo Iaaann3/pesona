@@ -29,9 +29,13 @@
                         <span class="text-success">
                             <i class="fas fa-check-circle"></i> Pembayaran Berhasil
                         </span>
-                    @else
+                    @elseif($tagihan->status == 'menunggu konfirmasi')
                         <span class="text-warning">
                             <i class="fas fa-clock"></i> Menunggu Pembayaran
+                        </span>
+                        @else
+                        <span class="text-danger">
+                            <i class="fas fa-times-circle"></i> Belum Terbayar
                         </span>
                     @endif
                 </div>

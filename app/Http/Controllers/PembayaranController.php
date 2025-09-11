@@ -34,6 +34,8 @@ public function create()
         return view('admin.pembayaran.create');
     }
 
+
+
     // Simpan data baru
     public function store(Request $request)
 {
@@ -45,26 +47,27 @@ $request->validate([
 ]);
 
 // Cek apakah bulan ini sudah ada pembayaran untuk semua user
-$exists = Pembayaran::whereMonth('tanggal', $today->month)
-    ->whereYear('tanggal', $today->year)
-    ->exists();
-
-if ($exists) {
-    return back()->withErrors(['msg' => 'Pembayaran bulan ini sudah dibuat.'])->withInput();
-}
-
+$today = now();
 $users = \App\Models\User::all();
 
 foreach ($users as $user) {
-    Pembayaran::create([
-        'id_user'    => $user->id,
-        'keamanan'   => $request->keamanan,
-        'kebersihan' => $request->kebersihan,
-        'tanggal'    => $today,
-        'status'     => 'belum terbayar',
-        'total'      => $request->keamanan + $request->kebersihan,
-    ]);
+    $exists = Pembayaran::where('id_user', $user->id)
+        ->whereMonth('tanggal', $today->month)
+        ->whereYear('tanggal', $today->year)
+        ->exists();
+
+    if (!$exists) {
+        Pembayaran::create([
+            'id_user' => $user->id,
+            'keamanan' => $request->keamanan,
+            'kebersihan' => $request->kebersihan,
+            'tanggal' => $today,
+            'status' => 'belum terbayar',
+            'total' => $request->keamanan + $request->kebersihan,
+        ]);
+    }
 }
+
 
 return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil dibuat untuk semua user.');
 
@@ -121,6 +124,23 @@ public function update(Request $request, $id)
     // Hapus pembayaran
     public function destroy($id)
     {
-       
+        // Cari data pembayaran
+    $pembayaran = \App\Models\Pembayaran::findOrFail($id);
+
+    // Hapus file bukti pembayaran jika ada
+    if ($pembayaran->dibayar && $pembayaran->dibayar->foto) {
+        $fotoPath = $pembayaran->dibayar->foto;
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($fotoPath)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($fotoPath);
+        }
+
+        // Hapus record dibayar terkait
+        $pembayaran->dibayar->delete();
+    }
+
+    // Hapus record pembayaran
+    $pembayaran->delete();
+
+    return redirect()->route('admin.pembayaran.index')->with('success', 'Data pembayaran berhasil dihapus.');
     }
 }

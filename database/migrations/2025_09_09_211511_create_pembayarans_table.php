@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('keamanan')->default(0);
             $table->integer('kebersihan')->default(0);
             $table->date('tanggal');
-            $table->enum('status', ['belum terbayar', 'pembayaran berhasil'])->default('belum terbayar');
+            $table->enum('status', ['belum terbayar','menunggu konfirmasi', 'pembayaran berhasil'])->default('belum terbayar');
             $table->foreignId('dibayar_id')->nullable()->constrained('dibayars')->onDelete('cascade');
             $table->integer('total')->default(0);
             $table->timestamps();

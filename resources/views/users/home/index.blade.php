@@ -24,17 +24,27 @@
         </div>
 
         @if($tagihan)
-            <button type="button" 
-        class="topup-btn bayar-home-btn" 
-        data-id="{{ $tagihan->id }}" 
-        data-bs-toggle="modal" 
-        data-bs-target="#pembayaranModal">
-    Bayar
-</button>
-            <!-- <div class="bayar-success-anim d-none mt-2">
-                <i class="fas fa-check-circle fa-2x text-success animate__animated animate__bounceIn"></i>
-                <span class="text-success ms-2">Pembayaran Berhasil!</span>
-            </div> -->
+            @if($tagihan->status == 'menunggu konfirmasi')
+                <button class="topup-btn" disabled style="background-color: #ffc107; color: #000;">
+                    <i class="fas fa-clock me-1"></i> Menunggu Konfirmasi
+                </button>
+                <div class="alert alert-warning mt-2 p-2" style="font-size: 12px; margin: 5px 0;">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Bukti pembayaran Anda sedang diverifikasi oleh admin
+                </div>
+            @elseif($tagihan->status == 'berhasil dibayar')
+                <button class="topup-btn" disabled style="background-color: #28a745;">
+                    <i class="fas fa-check me-1"></i> Lunas
+                </button>
+            @else
+                <button type="button" 
+                    class="topup-btn bayar-home-btn" 
+                    data-id="{{ $tagihan->id }}" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#pembayaranModal">
+                    Bayar
+                </button>
+            @endif
         @else
             <button class="topup-btn" disabled>
                 Tidak ada tagihan
@@ -55,89 +65,7 @@
         @endif
 
         <!-- Iklan Carousel Section -->
-        @if(isset($iklan) && $iklan->count() > 0)
-        <div style="overflow: hidden; width: 100%; margin-bottom: 20px;">
-            <div style="display: flex; animation: scrollCarousel {{ $iklan->count() * 3 }}s linear infinite; width: max-content;">
-                @foreach($iklan as $item)
-                    <div style="flex-shrink: 0; margin-right: 15px; min-width: 300px;">
-                        <div style="background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%); border-radius: 12px; padding: 0; color: white; position: relative; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); cursor: pointer; overflow: hidden;">
-                            <!-- Badge IKLAN -->
-                            <div style="position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.9); color: #333; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; z-index: 2;">IKLAN</div>
-                            
-                            @if($item->gambar)
-                                <!-- Dengan Gambar -->
-                                <div style="position: relative;">
-                                    <img src="{{ asset('storage/' . $item->gambar) }}" 
-                                         alt="{{ $item->judul }}" 
-                                         style="width: 100%; height: 120px; object-fit: cover;">
-                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 15px 15px 10px;">
-                                        <h6 style="margin: 0; font-size: 14px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{{ $item->judul }}</h6>
-                                        <p style="margin: 3px 0 0 0; font-size: 11px; opacity: 0.9; text-shadow: 0 1px 1px rgba(0,0,0,0.5);">{{ Str::limit($item->deskripsi, 50) }}</p>
-                                    </div>
-                                </div>
-                            @else
-                                <!-- Tanpa Gambar -->
-                                <div style="padding: 15px;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div style="font-size: 24px; opacity: 0.9;">
-                                            <i class="fas fa-bullhorn"></i>
-                                        </div>
-                                        <div>
-                                            <h6 style="margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3;">{{ $item->judul }}</h6>
-                                            <p style="margin: 3px 0 0 0; font-size: 11px; opacity: 0.8; line-height: 1.3;">{{ Str::limit($item->deskripsi, 60) }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-
-                <!-- Duplicate untuk seamless loop -->
-                @foreach($iklan as $item)
-                    <div style="flex-shrink: 0; margin-right: 15px; min-width: 300px;">
-                        <div style="background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%); border-radius: 12px; padding: 0; color: white; position: relative; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); cursor: pointer; overflow: hidden;">
-                            <!-- Badge IKLAN -->
-                            <div style="position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.9); color: #333; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; z-index: 2;">IKLAN</div>
-                            
-                            @if($item->gambar)
-                                <!-- Dengan Gambar -->
-                                <div style="position: relative;">
-                                    <img src="{{ asset('storage/' . $item->gambar) }}" 
-                                         alt="{{ $item->judul }}" 
-                                         style="width: 100%; height: 120px; object-fit: cover;">
-                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 15px 15px 10px;">
-                                        <h6 style="margin: 0; font-size: 14px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{{ $item->judul }}</h6>
-                                        <p style="margin: 3px 0 0 0; font-size: 11px; opacity: 0.9; text-shadow: 0 1px 1px rgba(0,0,0,0.5);">{{ Str::limit($item->deskripsi, 50) }}</p>
-                                    </div>
-                                </div>
-                            @else
-                                <!-- Tanpa Gambar -->
-                                <div style="padding: 15px;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div style="font-size: 24px; opacity: 0.9;">
-                                            <i class="fas fa-bullhorn"></i>
-                                        </div>
-                                        <div>
-                                            <h6 style="margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3;">{{ $item->judul }}</h6>
-                                            <p style="margin: 3px 0 0 0; font-size: 11px; opacity: 0.8; line-height: 1.3;">{{ Str::limit($item->deskripsi, 60) }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-
-        <style>
-            @keyframes scrollCarousel {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-50%); }
-            }
-        </style>
-        @endif
+       
 
         <!-- Services Section -->
         <h3 class="section-title">Info dan Layanan</h3>
@@ -297,13 +225,20 @@
         @csrf
         <div class="modal-header bg-success text-white">
           <h5 class="modal-title" id="pembayaranLabel">
-            <i class="fas fa-credit-card me-2"></i> Konfirmasi Pembayaran
+            <i class="fas fa-credit-card me-2"></i> Upload Bukti Pembayaran Pembayaran
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
           <input type="hidden" name="id_tagihan" id="id_tagihan">
+
+           <!-- Info Pembayaran -->
+          <div class="alert alert-info mb-3">
+            <h6><i class="fas fa-info-circle me-2"></i>Informasi Pembayaran</h6>
+            <p class="mb-2">Silakan transfer sesuai nominal tagihan ke salah satu rekening di bawah ini:</p>
+            <small class="text-muted">Setelah transfer, upload bukti pembayaran untuk verifikasi admin.</small>
+          </div>
 
             <div class="mb-3">
                 <label class="form-label">Pilih Rekening Tujuan</label>
@@ -327,123 +262,62 @@
             <input type="file" class="form-control" name="bukti_pembayaran" accept="image/*" required>
             <small class="text-muted">Format: JPG/PNG, max 2MB</small>
           </div>
+           <div class="alert alert-warning">
+            <small><i class="fas fa-exclamation-triangle me-1"></i>
+              Setelah upload bukti pembayaran, status tagihan akan berubah menjadi "Menunggu Konfirmasi" dan akan diverifikasi oleh admin dalam 1x24 jam.
+            </small>
+          </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-success">Kirim</button>
+          <button type="submit" class="btn btn-success" id="submitBtn">Upload Bukti</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="successLabel">
+          <i class="fas fa-check-circle me-2"></i> Berhasil
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+        <h5>Bukti Pembayaran Berhasil Dikirim</h5>
+        <p class="text-muted">Terima kasih! Bukti pembayaran Anda sedang diverifikasi oleh admin. Kami akan menginformasikan hasilnya dalam 1x24 jam.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="window.location.reload();">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 @push('styles')
 <style>
-/* Carousel Styles */
-.info-carousel-container {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
+.alert {
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
 }
 
-.info-carousel {
-    overflow: hidden;
-    width: 100%;
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
 }
 
-.carousel-track {
-    display: flex;
-    animation: scroll 20s linear infinite;
-    width: max-content;
-}
-
-.carousel-item {
-    flex-shrink: 0;
-    margin-right: 15px;
-    min-width: 280px;
-}
-
-.member-card {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    border-radius: 12px;
-    padding: 15px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-    transition: transform 0.3s ease;
-    cursor: pointer;
-}
-
-.member-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-}
-
-.member-card.promo-card {
-    background: linear-gradient(135deg, #fd7e14 0%, #ffc107 100%);
-    box-shadow: 0 4px 15px rgba(253, 126, 20, 0.3);
-}
-
-.member-card.info-card {
-    background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-.member-card.event-card {
-    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-}
-
-.member-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 5px 10px;
-    border-radius: 0 12px 0 12px;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.promo-badge {
-    background: rgba(255, 255, 255, 0.25);
-}
-
-.info-badge {
-    background: rgba(255, 255, 255, 0.25);
-}
-
-.event-badge {
-    background: rgba(255, 255, 255, 0.25);
-}
-
-.member-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.member-icon {
-    font-size: 24px;
-    opacity: 0.9;
-}
-
-.member-text h6 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.member-text p {
-    margin: 2px 0 0 0;
-    font-size: 11px;
-    opacity: 0.8;
-    line-height: 1.2;
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
 }
 
 /* Carousel Animation */
@@ -496,25 +370,7 @@
     });
   });
 
-document.querySelectorAll('.bayar-home-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const id = this.dataset.id;
-        fetch("{{ url('user/pembayaran') }}/" + id + "/bayar", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success){
-                this.classList.add('d-none');
-                this.nextElementSibling.classList.remove('d-none');
-            }
-        });
-    });
-});
+
 
 // Print Tata Tertib
 document.addEventListener('DOMContentLoaded', function () {
@@ -533,10 +389,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+// Handle pembayaran modal
 document.addEventListener('DOMContentLoaded', function () {
     const bayarBtns = document.querySelectorAll('.bayar-home-btn');
     const formPembayaran = document.getElementById('formPembayaran');
     const tagihanInput = document.getElementById('id_tagihan');
+    const submitBtn = document . getElementById('submitBtn');
 
     bayarBtns.forEach(btn => {
         btn.addEventListener('click', function () {
