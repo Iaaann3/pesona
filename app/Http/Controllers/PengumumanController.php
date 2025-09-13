@@ -10,8 +10,8 @@ class PengumumanController extends Controller
 {
     public function index()
     {
-        $pengumumans = Pengumuman::latest()->paginate(10);
-        return view('admin.pengumuman.index', compact('pengumumans'));
+        $pengumumans = Pengumuman::latest()->paginate(5);
+       return view('admin.pengumuman.index', compact('pengumumans'));
     }
 
     public function create()

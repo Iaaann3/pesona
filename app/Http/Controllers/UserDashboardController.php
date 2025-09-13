@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Pembayaran;
 use App\Models\Pengumuman;
 use App\Models\Dibayar;
+use App\Models\Iklan;
 use Illuminate\Http\Request;
 use App\Models\Rekening;
 
@@ -14,7 +15,7 @@ class UserDashboardController extends Controller
     public function index()
     {
         $pengumuman = Pengumuman::latest()->take(5)->get();
-
+        $iklans = Iklan::latest()->take(5)->get();
         $userId = Auth::id();
 
         // Ambil tagihan terakhir user ini
@@ -32,6 +33,7 @@ class UserDashboardController extends Controller
             'tagihan' => $tagihan,
             'rekenings' => Rekening::all(),
             'totalPembayaran' => $totalPembayaran,
+            'iklans' => $iklans,
         ]);
     }
     

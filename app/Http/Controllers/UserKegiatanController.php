@@ -9,7 +9,7 @@ class UserKegiatanController extends Controller
 {
     public function index()
     {
-        $kegiatan = Kegiatan::latest()->paginate(10);
+        $kegiatan = Kegiatan::latest()->paginate(5);
         return view('users.kegiatan.index', compact('kegiatan'));
     }
 

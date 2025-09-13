@@ -7,7 +7,7 @@
         <div class="profile-avatar">
             <i class="fas fa-user"></i>
         </div>
-        <div class="greeting-text">Selamat datang,</div>
+        <div class="greeting-text">Selamat datang</div>
         <h1 class="user-name">{{ Auth::user()->name ?? 'User' }}</h1>
 
         <!-- Balance Card -->
@@ -24,14 +24,14 @@
         </div>
 
         @if($tagihan)
-            @if($tagihan->status == 'menunggu konfirmasi')
+            @if($tagihan->dibayar && $tagihan->dibayar->foto)
                 <button class="topup-btn" disabled style="background-color: #ffc107; color: #000;">
                     <i class="fas fa-clock me-1"></i> Menunggu Konfirmasi
                 </button>
-                <div class="alert alert-warning mt-2 p-2" style="font-size: 12px; margin: 5px 0;">
+                <!-- <div class="alert alert-warning mt-2 p-2" style="font-size: 12px; margin: 5px 0;">
                     <i class="fas fa-info-circle me-1"></i>
                     Bukti pembayaran Anda sedang diverifikasi oleh admin
-                </div>
+                </div> -->
             @elseif($tagihan->status == 'berhasil dibayar')
                 <button class="topup-btn" disabled style="background-color: #28a745;">
                     <i class="fas fa-check me-1"></i> Lunas
@@ -64,8 +64,33 @@
             </a>
         @endif
 
+        
         <!-- Iklan Carousel Section -->
-       
+       @if($iklans->count() > 0)
+<div id="iklanCarousel" class="carousel slide my-4" data-bs-ride="carousel">
+  <div class="carousel-inner rounded shadow">
+    @foreach($iklans as $key => $iklan)
+      <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+        <img src="{{ asset('storage/' . $iklan->gambar) }}" 
+             class="d-block w-100" 
+             alt="{{ $iklan->judul }}" 
+             style="max-height:200px; object-fit:cover; border-radius:8px;">
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+          <h6 class="mb-0">{{ $iklan->judul }}</h6>
+          <small>{{ Str::limit($iklan->deskripsi, 50) }}</small>
+        </div>
+      </div>
+    @endforeach
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#iklanCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#iklanCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+@endif
 
         <!-- Services Section -->
         <h3 class="section-title">Info dan Layanan</h3>

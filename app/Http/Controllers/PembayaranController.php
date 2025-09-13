@@ -13,15 +13,50 @@ class PembayaranController extends Controller
 {
     
     // Menampilkan semua pembayaran
-   public function index()
+   public function index(Request $request)
 {
-    if (auth()->guard('admin')->check()) {
+   if (auth()->guard('admin')->check()) {
         // Kalau admin login → tampilkan semua pembayaran
-        $data = Pembayaran::with('user')->get();
-    } else {
-        // Kalau user login → tampilkan hanya pembayaran user tersebut
-        $data = Pembayaran::with('user')->where('id_user', auth()->id())->get();
+
+        $perPage = $request->get('per_page', 10); // default 10
+        $search  = $request->get('search');
+        $status  = $request->get('status');
+
+        $query = Pembayaran::with('user', 'dibayar.rekening');
+
+        // Tambahkan filter pencarian
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('no_rumah', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
     }
+
+
+    } else {
+        // Kalau user login → hanya lihat pembayaran miliknya
+        $query = Pembayaran::with('user', 'dibayar')
+            ->where('id_user', auth()->id());
+
+        // Filter pencarian juga bisa dipakai user
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                 $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('no_rumah', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $data = $query->latest()->get();
+    }
+
+    $data = $query->paginate($perPage)->appends($request->all());
 
 
     return view('admin.pembayaran.index', compact('data'));
@@ -122,25 +157,42 @@ public function update(Request $request, $id)
 
 
     // Hapus pembayaran
-    public function destroy($id)
-    {
-        // Cari data pembayaran
+   // Hapus hanya pembayaran (dan otomatis hapus relasi jika ada karena foreign key onDelete cascade)
+public function destroyPembayaran($id)
+{
     $pembayaran = \App\Models\Pembayaran::findOrFail($id);
 
-    // Hapus file bukti pembayaran jika ada
+    // Kalau mau aman, hapus dulu bukti bayar terkait manual
     if ($pembayaran->dibayar && $pembayaran->dibayar->foto) {
         $fotoPath = $pembayaran->dibayar->foto;
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($fotoPath)) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($fotoPath);
+        if (\Storage::disk('public')->exists($fotoPath)) {
+            \Storage::disk('public')->delete($fotoPath);
         }
-
-        // Hapus record dibayar terkait
         $pembayaran->dibayar->delete();
     }
 
-    // Hapus record pembayaran
     $pembayaran->delete();
 
-    return redirect()->route('admin.pembayaran.index')->with('success', 'Data pembayaran berhasil dihapus.');
+    return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
+}
+
+
+// Hapus hanya data bukti bayar (foto + relasi dibayar)
+public function destroyDibayar($id)
+{
+    $pembayaran = \App\Models\Pembayaran::with('dibayar')->findOrFail($id);
+
+    if ($pembayaran->dibayar) {
+        // hapus file foto
+        if ($pembayaran->dibayar->foto && \Storage::disk('public')->exists($pembayaran->dibayar->foto)) {
+            \Storage::disk('public')->delete($pembayaran->dibayar->foto);
+        }
+
+        $pembayaran->dibayar->delete();
+        // ubah status pembayaran kembali ke "belum terbayar"
+        $pembayaran->update(['status' => 'belum terbayar']);
     }
+
+    return redirect()->route('admin.pembayaran.index')->with('success', 'Bukti pembayaran berhasil dihapus.');
+}
 }

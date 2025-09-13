@@ -11,7 +11,8 @@ class RekeningController extends Controller
      */
     public function index()
     {
-        $rekenings = Rekening::all();
+         $rekenings = Rekening::orderBy('bank_name', 'asc')
+                        ->paginate(10); // 10 data per halaman
         return view('admin.rekenings.index', compact('rekenings'));
 
 

@@ -35,7 +35,20 @@ Route::group([
     'as'         => 'admin.',
     'middleware' => ['auth:admin' ],
 ], function () {
+
     Route::resource('pembayaran', PembayaranController::class);
+
+   // Hapus bukti bayar saja
+Route::delete('/pembayaran/{id}/hapus-bukti', [PembayaranController::class, 'destroyDibayar'])
+    ->name('pembayaran.destroyDibayar');
+
+// Hapus pembayaran beserta data terkait
+Route::delete('/pembayaran/{id}/hapus', [PembayaranController::class, 'destroyPembayaran'])
+    ->name('pembayaran.destroyPembayaran');
+
+    
+    
+    
     Route::resource('iklan', IklanController::class);
     Route::resource('pengumuman', PengumumanController::class);
     Route::resource('kegiatan', KegiatanController::class);

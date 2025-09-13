@@ -33,11 +33,11 @@
                         @endforelse
                     </tbody>
                 </table>
-                @if($kritiks->hasPages())
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $kritiks->links() }}
-                    </div>
-                @endif
+               @if($kritiks->hasPages())
+    <div class="d-flex justify-content-center mt-3">
+        {{ $kritiks->links() }}
+    </div>
+          @endif
             </div>
         </div>
     </div>

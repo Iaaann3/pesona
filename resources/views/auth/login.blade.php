@@ -29,13 +29,13 @@
             @enderror
         </div>
         
-        <div class="contact-admin-link mt-3 text-center">
-    <a href="https://wa.me/628815873744?text=Halo%20Admin,%20saya%20belum%20terdaftar" 
+        <div class="contact-admin-link">
+            <i class="fas fa-question-circle"></i> Belum terdaftar? <a href="https://wa.me/628815873744?text=Halo%20Admin,%20saya%20belum%20terdaftar" 
        target="_blank" 
        class="btn btn-success btn-sm">
-        <i class="fas fa-question-circle me-1"></i> Hubungi Admin
+         Hubungi Admin
     </a>
-</div>
+        </div>
         
         <button type="submit" class="submit-btn">
             Submit

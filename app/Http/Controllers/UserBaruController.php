@@ -11,8 +11,13 @@ class UserBaruController extends Controller
 
     public function index()
     {
-        $users = User::all();
+         // Ambil user dengan urutan berdasarkan no_rumah
+    $users = User::orderBy('no_rumah', 'asc') 
+                 ->paginate(5); // tampilkan 10 per halaman
+
+    
         return view('admin.users.index', compact('users'));
+
     }
 
      public function create()

@@ -11,7 +11,7 @@ class UserPengumumanController extends Controller
 {
    public function index()
     {
-        $pengumuman = Pengumuman::latest()->paginate(10);
+        $pengumuman = Pengumuman::latest()->paginate(5);
         return view('users.pengumuman.index', compact('pengumuman'));
     }
 

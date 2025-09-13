@@ -10,7 +10,9 @@
             <p><strong>Nama:</strong> {{ Auth::user()->name }}</p>
             <p><strong>Tanggal Tagihan:</strong> {{ $pembayaran->tanggal->format('d M Y') }}</p>
             <p><strong>Status:</strong> 
-                @if($pembayaran->status == 'belum terbayar')
+               @if($pembayaran->status == 'belum terbayar' && $pembayaran->dibayar && $pembayaran->dibayar->foto)
+                    <span class="badge bg-warning text-dark">Menunggu Konfirmasi</span>
+                @elseif($pembayaran->status == 'belum terbayar')
                     <span class="badge bg-danger">Belum Terbayar</span>
                 @elseif($pembayaran->status == 'pembayaran berhasil')
                     <span class="badge bg-success">Berhasil</span>

@@ -53,6 +53,14 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
+    
+
+        {{-- Pagination --}}
+                @if($users->hasPages())
+                   <div class="d-flex justify-content-center mt-3">
+        {{ $users->appends(request()->query())->links('pagination::bootstrap-5') }}
+                   </div>
+                @endif
+            </div>
 </div>
 @endsection

@@ -12,25 +12,27 @@ class IklanController extends Controller
 {
     public function index()
     {
-       if (auth()->user()->role === 'admin') {
-    $iklans = Iklan::with('user')->paginate(10);
+      if (auth()->guard('admin')->check()) {
+        // Admin lihat semua
+        $iklans = Iklan::with('user')->latest()->paginate(5);
     } else {
-        $iklans = Iklan::with('user')->where('id_user', auth()->id())->paginate(10);
+        // User login dengan guard default
+        $iklans = Iklan::with('user')
+            ->where('id_user', auth()->id())
+            ->latest()
+            ->paginate(5);
     }
 
     $users = User::where('role', '!=', 'admin')->get();
 
     return view('admin.iklan.index', compact('iklans', 'users'));
-
     }
 
     public function create()
     {
-        return view('admin.iklan.create', [
-            'users' => User::where('role', '!=', 'admin')->get(),
-        ]);
+        $users = User::where('role', '!=', 'admin')->get();
+        return view('admin.iklan.create', compact('users'));
     }
-
     public function store(Request $request)
     {
         $request->validate([

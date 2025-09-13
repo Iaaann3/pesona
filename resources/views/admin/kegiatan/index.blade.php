@@ -59,9 +59,9 @@
                     </tbody>
                 </table>
                 @if($kegiatans->hasPages())
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $kegiatans->links() }}
-                    </div>
+    <div class="d-flex justify-content-center mt-3">
+        {{ $kegiatans->links() }}
+    </div>
                 @endif
             </div>
         </div>
