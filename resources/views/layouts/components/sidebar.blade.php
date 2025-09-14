@@ -17,6 +17,15 @@
             </a>
           </li>
 
+          <li class="sidebar-item" >
+           <a class="sidebar-link {{ request()->routeIs('admin.biaya_setting.*') ? 'bg-primary text-white rounded' : '' }}" 
+                href="{{ route('admin.biaya_setting.index') }}">
+                <span><i class="ti ti-settings"></i></span>
+                <span class="hide-menu">Biaya Setting</span>
+             </a>
+          </li>
+
+            <!-- ---------------------------------- -->
              <li class="sidebar-item ">
               <a class="sidebar-link {{ request()->routeIs('admin.rekening.*') ? 'bg-primary text-white rounded' : '' }}" href="{{ route('admin.rekenings.index') }}">
                 <span><i class="ti ti-building-bank"></i></span>

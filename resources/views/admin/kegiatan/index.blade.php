@@ -31,7 +31,7 @@
                                 <td>{{ $kegiatan->tanggal }}</td>
                                 <td>
                                     @if($kegiatan->gambar)
-                                        <img src="{{ asset('storage/' . $kegiatan->gambar) }}" 
+                                        <img src="{{ asset('uploads/' . $kegiatan->gambar) }}" 
                                              alt="{{ $kegiatan->nama_kegiatan }}" 
                                              class="img-thumbnail" 
                                              style="max-width:100px;">

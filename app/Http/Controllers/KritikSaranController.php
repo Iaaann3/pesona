@@ -10,11 +10,10 @@ class KritikSaranController extends Controller
 {
     public function index()
     {
-   $kritiks = KritikSaran::with('user')
-    ->where('id_user', auth()->id())
-    ->latest()
-    ->paginate(5);
-
+        $kritiks = KritikSaran::with('user')
+            ->where('id_user', auth()->id())
+            ->latest()
+            ->paginate(5);
 
         return view('admin.saran.index', compact('kritiks'));
     }
@@ -22,7 +21,6 @@ class KritikSaranController extends Controller
     public function create()
     {
         $users = User::where('role', '!=', 'admin')->get();
-
         return view('admin.saran.create', compact('users'));
     }
 
@@ -30,38 +28,35 @@ class KritikSaranController extends Controller
     {
         $request->validate([
             'id_user' => 'nullable|exists:users,id',
-            'isi'     => 'required|string',
+            'isi' => 'required|string',
         ]);
 
-        try {
-            DB::transaction(function () use ($request) {
-                KritikSaran::create($request->all());
-            });
+        DB::transaction(function() use ($request) {
+            KritikSaran::create($request->all());
+        });
 
-            return redirect()->route('admin.saran.index')->with('success', 'Kritik & saran berhasil dikirim.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan saat mengirim kritik & saran.');
-        }
+        return redirect()->route('admin.saran.index')->with('success', 'Kritik & saran berhasil dikirim.');
     }
 
     public function show($id)
     {
         $kritik = KritikSaran::with('user')->findOrFail($id);
-
         return view('admin.saran.show', compact('kritik'));
     }
 
     public function destroy($id)
     {
-        try {
-            DB::transaction(function () use ($id) {
-                $kritik = KritikSaran::findOrFail($id);
-                $kritik->delete();
-            });
+        $kritik = KritikSaran::findOrFail($id);
 
-            return redirect()->route('admin.saran.index')->with('success', 'Kritik & saran berhasil dihapus.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menghapus kritik & saran.');
+        // Otorisasi: pemilik atau admin
+        if (auth()->user()->role !== 'admin' && $kritik->id_user !== auth()->id()) {
+            abort(403, 'Unauthorized');
         }
+
+        DB::transaction(function() use ($kritik) {
+            $kritik->delete();
+        });
+
+        return redirect()->route('admin.saran.index')->with('success', 'Kritik & saran berhasil dihapus.');
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\IklanController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\KritikSaranController;
+use App\Http\Controllers\BiayaSettingController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\UserDashboardController;
@@ -38,6 +39,7 @@ Route::group([
 
     Route::resource('pembayaran', PembayaranController::class);
 
+    Route::put('pembayaran/{id}', [PembayaranController::class, 'update'])->name('admin.pembayaran.update');
    // Hapus bukti bayar saja
 Route::delete('/pembayaran/{id}/hapus-bukti', [PembayaranController::class, 'destroyDibayar'])
     ->name('pembayaran.destroyDibayar');
@@ -45,10 +47,12 @@ Route::delete('/pembayaran/{id}/hapus-bukti', [PembayaranController::class, 'des
 // Hapus pembayaran beserta data terkait
 Route::delete('/pembayaran/{id}/hapus', [PembayaranController::class, 'destroyPembayaran'])
     ->name('pembayaran.destroyPembayaran');
-
+// routes/web.php
+Route::post('/pembayaran/generate', [PembayaranController::class, 'generate'])
+    ->name('pembayaran.generate');
     
     
-    
+    Route::resource('biaya_setting', \App\Http\Controllers\BiayaSettingController::class)->only(['index', 'store']);
     Route::resource('iklan', IklanController::class);
     Route::resource('pengumuman', PengumumanController::class);
     Route::resource('kegiatan', KegiatanController::class);

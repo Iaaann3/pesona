@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
             $table->integer('keamanan')->default(0);
             $table->integer('kebersihan')->default(0);
-            $table->date('tanggal');
+            $table->date('tanggal'); // tanggal dibuatnya pembayaran
+            $table->date('tanggal_tagih')->nullable(); // tanggal mulai ditagihkan
+            $table->date('tanggal_jatuh_tempo')->nullable(); // batas akhir pembayaran
             $table->enum('status', ['belum terbayar', 'pembayaran berhasil'])->default('belum terbayar');
             $table->foreignId('dibayar_id')->nullable()->constrained('dibayars')->nullOnDelete();
             $table->integer('total')->default(0);

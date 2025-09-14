@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class PengumumanController extends Controller
 {
     public function index()
     {
         $pengumumans = Pengumuman::latest()->paginate(5);
-       return view('admin.pengumuman.index', compact('pengumumans'));
+        return view('admin.pengumuman.index', compact('pengumumans'));
     }
 
     public function create()
@@ -28,32 +28,32 @@ class PengumumanController extends Controller
             'gambar'  => 'nullable|image|max:2048',
         ]);
 
-        DB::beginTransaction();
-        try {
+        DB::transaction(function () use ($request) {
             $pengumuman          = new Pengumuman();
             $pengumuman->judul   = $request->judul;
             $pengumuman->isi     = $request->isi;
             $pengumuman->tanggal = $request->tanggal;
 
             if ($request->hasFile('gambar')) {
-                $path               = $request->file('gambar')->store('pengumuman', 'public');
-                $pengumuman->gambar = $path; // simpan path file, bukan judul
+                $pengumuman->gambar = $request->file('gambar')->store('pengumuman', 'public');
             }
 
             $pengumuman->save();
-            DB::commit();
+        });
 
-            return redirect()->route('admin.pengumuman.index')
-                ->with('success', 'Pengumuman berhasil ditambahkan');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Gagal menambahkan pengumuman: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', 'Pengumuman berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
+
+        // Otorisasi: admin atau pemilik (jika ada owner)
+        if (auth()->user()->role !== 'admin') {
+            // misal owner check bisa ditambahkan jika model punya id_user
+        }
+
         return view('admin.pengumuman.edit', compact('pengumuman'));
     }
 
@@ -66,51 +66,47 @@ class PengumumanController extends Controller
             'gambar'  => 'nullable|image|max:2048',
         ]);
 
-        DB::beginTransaction();
-        try {
-            $pengumuman          = Pengumuman::findOrFail($id);
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        DB::transaction(function () use ($request, $pengumuman) {
             $pengumuman->judul   = $request->judul;
             $pengumuman->isi     = $request->isi;
             $pengumuman->tanggal = $request->tanggal;
 
             if ($request->hasFile('gambar')) {
-                if ($pengumuman->gambar && Storage::disk('public')->exists($pengumuman->gambar)) {
-                    Storage::disk('public')->delete($pengumuman->gambar);
+                // Hapus file lama
+                if ($pengumuman->gambar && File::exists(public_path('uploads/' . $pengumuman->gambar))) {
+                    File::delete(public_path('uploads/' . $pengumuman->gambar));
                 }
 
-                $path               = $request->file('gambar')->store('pengumuman', 'public');
-                $pengumuman->gambar = $path;
+                $pengumuman->gambar = $request->file('gambar')->store('pengumuman', 'public');
             }
 
             $pengumuman->save();
-            DB::commit();
+        });
 
-            return redirect()->route('admin.pengumuman.index')
-                ->with('success', 'Pengumuman berhasil diperbarui');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Gagal memperbarui pengumuman: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', 'Pengumuman berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
-            $pengumuman = Pengumuman::findOrFail($id);
+        $pengumuman = Pengumuman::findOrFail($id);
 
-            if ($pengumuman->gambar && Storage::disk('public')->exists($pengumuman->gambar)) {
-                Storage::disk('public')->delete($pengumuman->gambar);
+        // Otorisasi
+        if (auth()->user()->role !== 'admin') {
+            // bisa ditambahkan cek owner jika ada id_user
+        }
+
+        DB::transaction(function () use ($pengumuman) {
+            if ($pengumuman->gambar && File::exists(public_path('uploads/' . $pengumuman->gambar))) {
+                File::delete(public_path('uploads/' . $pengumuman->gambar));
             }
 
             $pengumuman->delete();
-            DB::commit();
+        });
 
-            return redirect()->route('admin.pengumuman.index')
-                ->with('success', 'Pengumuman berhasil dihapus');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Gagal menghapus pengumuman: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', 'Pengumuman berhasil dihapus');
     }
 }

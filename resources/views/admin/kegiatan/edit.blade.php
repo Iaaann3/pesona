@@ -48,7 +48,7 @@
                     <label for="gambar" class="form-label">Gambar</label>
                     @if($kegiatan->gambar)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . $kegiatan->gambar) }}" alt="Gambar" style="max-width:120px;">
+                            <img src="{{ asset('uploads/' . $kegiatan->gambar) }}" alt="Gambar" style="max-width:120px;">
                         </div>
                     @endif
                     <input type="file" name="gambar" id="gambar" class="form-control @error('gambar') is-invalid @enderror" accept="image/*">

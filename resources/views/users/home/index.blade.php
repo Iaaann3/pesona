@@ -71,7 +71,7 @@
   <div class="carousel-inner rounded shadow">
     @foreach($iklans as $key => $iklan)
       <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-        <img src="{{ asset('storage/' . $iklan->gambar) }}" 
+        <img src="{{ asset('uploads/' . $iklan->gambar) }}" 
              class="d-block w-100" 
              alt="{{ $iklan->judul }}" 
              style="max-height:200px; object-fit:cover; border-radius:8px;">
@@ -193,7 +193,7 @@
                 <div class="news-item">
                     <div class="news-image">
                         @if($item->gambar)
-                            <img src="{{ asset('storage/' . $item->gambar) }}" 
+                            <img src="{{ asset('uploads/' . $item->gambar) }}" 
                                 alt="{{ $item->judul }}" 
                                 style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
                         @endif

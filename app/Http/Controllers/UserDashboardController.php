@@ -39,33 +39,36 @@ class UserDashboardController extends Controller
     
     public function store(Request $request)
     {
-        // 1️⃣ Validasi input
-    $request->validate([
-        'id_tagihan' => 'required|exists:pembayarans,id',
-        'rekening_id' => 'required|exists:rekenings,id',
-        'bukti_pembayaran' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+        $request->validate([
+            'id_tagihan' => 'required|exists:pembayarans,id',
+            'rekening_id' => 'required|exists:rekenings,id',
+            'bukti_pembayaran' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    // 2️⃣ Simpan file bukti transfer
-    $fotoPath = null;
-    if ($request->hasFile('bukti_pembayaran')) {
-        $fotoPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
-    }
+        $pembayaran = Pembayaran::findOrFail($request->id_tagihan);
 
-    // 3️⃣ Buat record Dibayar
-    $dibayar = Dibayar::create([
-        'id_user' => auth()->id(),
-        'rekening_id' => $request->rekening_id,
-        'foto' => $fotoPath,
-        'pembayaran_id' => $request->id_tagihan,
-    ]);
+        // Otorisasi: pemilik atau admin
+        if ($pembayaran->id_user !== auth()->id() && auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
 
-    // 4️⃣ Update kolom dibayar_id di Pembayaran
-    $pembayaran = Pembayaran::find($request->id_tagihan);
-    $pembayaran->update(['dibayar_id' => $dibayar->id]);
+        DB::transaction(function () use ($request, $pembayaran) {
+            $fotoPath = null;
+            if ($request->hasFile('bukti_pembayaran')) {
+                $fotoPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+            }
 
-    // 5️⃣ Redirect ke home
-    return redirect()->route('user.home.index')->with('success', 'Bukti pembayaran berhasil dikirim.');
+            $dibayar = Dibayar::create([
+                'id_user' => $pembayaran->id_user,
+                'rekening_id' => $request->rekening_id,
+                'foto' => $fotoPath,
+                'pembayaran_id' => $pembayaran->id,
+            ]);
+
+            $pembayaran->update(['dibayar_id' => $dibayar->id, 'status' => 'pembayaran berhasil']);
+        });
+
+        return redirect()->route('user.home.index')->with('success', 'Bukti pembayaran berhasil dikirim.');
     }
 }
 

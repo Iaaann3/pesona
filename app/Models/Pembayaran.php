@@ -17,6 +17,8 @@ class Pembayaran extends Model
         'id_user',
         'keamanan',
         'kebersihan',
+        'tanggal_tagih', 
+        'tanggal_jatuh_tempo',
         'tanggal',
         'status',
         'dibayar_id',
