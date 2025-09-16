@@ -9,7 +9,7 @@
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.png') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}" />
 
-  <title>Modernize Bootstrap Admin</title>
+  <title>PP8B</title>
   <link rel="stylesheet" href="{{ asset('assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}" />
 </head>
 
@@ -33,7 +33,9 @@
     <!-- Sidebar Start -->
     <aside class="left-sidebar with-vertical">
       <div class="brand-logo d-flex align-items-center justify-content-between">
-        <h1>Admin IPL</h1>
+  <img src="{{ asset('assets/images/big/pesona1.jpg') }}" alt="Logo"
+     class="rounded-circle border border-2 border-primary mx-auto d-block"
+     style="width:130px; height:130px; object-fit:cover;">
         <a href="javascript:void(0)" class="sidebartoggler ms-auto text-decoration-none fs-5 d-block d-xl-none">
           <i class="ti ti-x"></i>
         </a>

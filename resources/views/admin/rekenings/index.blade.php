@@ -2,29 +2,31 @@
 
 @section('content')
 <div class="container-fluid d-flex flex-column align-items-center min-vh-100 p-3 mt-5">
-    <!-- Header + tombol tambah -->
-    <div class="d-flex justify-content-between align-items-center w-100 mb-4" style="max-width:1200px;">
-        <h1 class="mb-0">Daftar Rekening</h1>
-        <a href="{{ route('admin.rekenings.create') }}" class="btn btn-primary">
-            + Tambah Rekening
-        </a>
-    </div>
+    <h1 class="mb-4 text-center">Daftar Rekening</h1>
 
-    <!-- Notifikasi sukses -->
+    {{-- Notifikasi sukses --}}
     @if(session('success'))
         <div class="alert alert-success w-100" style="max-width:1200px;">
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- Card table -->
     <div class="card w-100 mt-2" style="max-width:1200px;">
         <div class="card-body">
+
+            {{-- Tombol tambah --}}
+            <div class="mb-3 text-end">
+                <a href="{{ route('admin.rekenings.create') }}" class="btn btn-success">
+                    + Tambah Rekening
+                </a>
+            </div>
+
+            {{-- Tabel --}}
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="bg-success text-white text-center">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="bg-primary text-white text-center">
                         <tr>
-                            <th>#</th>
+                            <th>No</th>
                             <th>Bank</th>
                             <th>Nomor Rekening</th>
                             <th>Aksi</th>
@@ -33,15 +35,15 @@
                     <tbody class="text-center">
                         @forelse($rekenings as $rekening)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $loop->iteration + ($rekenings->currentPage()-1) * $rekenings->perPage() }}</td>
                                 <td>{{ $rekening->bank_name }}</td>
                                 <td>{{ $rekening->number }}</td>
                                 <td>
-                                    <a href="{{ route('admin.rekenings.edit', $rekening->id) }}" class="btn btn-sm btn-warning me-1">Edit</a>
-                                    <form action="{{ route('admin.rekenings.destroy', $rekening->id) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('admin.rekenings.edit', $rekening->id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
+                                    <form action="{{ route('admin.rekenings.destroy', $rekening->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Yakin hapus rekening ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus rekening ini?')">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger mb-1">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
@@ -52,9 +54,11 @@
                         @endforelse
                     </tbody>
                 </table>
-                 <div class="d-flex justify-content-center mt-3">
-               {{ $rekenings->links() }}
-               </div>
+
+                {{-- Pagination --}}
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $rekenings->links() }}
+                </div>
             </div>
         </div>
     </div>

@@ -90,9 +90,6 @@ Route::group([
     Route::get('/pembayaran/riwayat', [App\Http\Controllers\UserPembayaranController::class, 'riwayat'])
         ->name('pembayaran.riwayat');
 
-    // bayar
-   
-
         
     // Detail pembayaran
     Route::get('/pembayaran/{id}/detail', [UserPembayaranController::class, 'detail'])
