@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -28,7 +29,11 @@ class LoginController extends Controller
             return redirect()->route('user.dashboard');
         }
 
-        return redirect('/home');
+        // Kalau role aneh → logout & balikin ke login dengan error
+        Auth::logout();
+        return redirect()->route('login')->withErrors([
+            'login' => 'Role tidak valid, hubungi admin.',
+        ]);
     }
 
     public function __construct()
